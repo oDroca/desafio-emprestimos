@@ -14,26 +14,25 @@ public class LoansService {
     
     public LoansResponseDTO postLoans(LoansRequestDTO loansRequest) {
         Set<LoansModel> loans = new HashSet<>();
+
+        Double income = loansRequest.income();
         
-        if (loansRequest.income() <= 3000.00) {
+        if (loansRequest.location().equals("SP")) {
+            if ((income > 3000.00 && income < 5000.00 || income > 5000.00) && loansRequest.age() < 30) {
+                loans.add(new LoansModel("PERSONAL", 4));
+                loans.add(new LoansModel("GUARANTEED", 3));
+            }
+        }
+
+        if (income <= 3000.00 || income > 3000.00) {
             loans.add(new LoansModel("PERSONAL", 4));
+            loans.add(new LoansModel("GUARANTEED", 3));
         }
         
-        if (loansRequest.income() > 3000.00 && loansRequest.income() < 5000.00 && loansRequest.age() < 30 && loansRequest.location().equals("SP")) {
-            loans.add(new LoansModel("PERSONAL", 4));
-        }
-        
-        if (loansRequest.income() >= 5000.00) {
+        if (income >= 5000.00) {
             loans.add(new LoansModel("CONSIGNMENT", 2));
         }
-        
-        if (loansRequest.income() <= 3000.00) {
-            loans.add(new LoansModel("GUARANTEED", 3));
-        }
-        
-        if (loansRequest.income() > 3000.00 && loansRequest.income() < 5000.00 && loansRequest.age() < 30 && loansRequest.location().equals("SP")) {
-            loans.add(new LoansModel("GUARANTEED", 3));
-        }
+
 
         return new LoansResponseDTO(loansRequest.name(), loans);
     }
